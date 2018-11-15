@@ -52,16 +52,19 @@ const App = {
     const self = this
 
     let meta
-    MetaCoin.deployed().then(function (instance) {
-      meta = instance
-      return meta.getBalance.call(account, { from: account })
-    }).then(function (value) {
-      const balanceElement = document.getElementById('balance')
-      balanceElement.innerHTML = value.valueOf()
-    }).catch(function (e) {
-      console.log(e)
-      self.setStatus('Error getting balance; see log.')
-    })
+    MetaCoin.deployed()
+      .then(function (instance) {
+        meta = instance
+        return meta.getBalance.call(account, { from: account })
+      })
+      .then(function (value) {
+        const balanceElement = document.getElementById('balance')
+        balanceElement.innerHTML = value.valueOf()
+      })
+      .catch(function (e) {
+        console.log(e)
+        self.setStatus('Error getting balance; see log.')
+      })
   },
 
   sendCoin: function () {
@@ -73,16 +76,35 @@ const App = {
     this.setStatus('Initiating transaction... (please wait)')
 
     let meta
-    MetaCoin.deployed().then(function (instance) {
-      meta = instance
-      return meta.sendCoin(receiver, amount, { from: account })
-    }).then(function () {
-      self.setStatus('Transaction complete!')
-      self.refreshBalance()
-    }).catch(function (e) {
-      console.log(e)
-      self.setStatus('Error sending coin; see log.')
+    MetaCoin.deployed()
+      .then(function (instance) {
+        meta = instance
+        return meta.sendCoin(receiver, amount, { from: account })
+      })
+      .then(function () {
+        self.setStatus('Transaction complete!')
+        self.refreshBalance()
+      })
+      .catch(function (e) {
+        console.log(e)
+        self.setStatus('Error sending coin; see log.')
+      })
+  },
+
+  addCert: function () {
+    // todo: 新增认证
+    let elementIDs = ['name', 'age', 'id', 'country', 'school', 'date', 'major']
+    let values = {}
+    elementIDs.forEach(id => {
+      values[id] = document.getElementById(id).value
     })
+    console.log(values)
+  },
+
+  searchCert: function () {
+    // todo: 查询认证
+    let searchKeyword = document.getElementById('search_keyword').value
+    console.log(searchKeyword)
   }
 }
 
@@ -93,20 +115,20 @@ window.addEventListener('load', function () {
   if (typeof web3 !== 'undefined') {
     console.warn(
       'Using web3 detected from external source.' +
-      ' If you find that your accounts don\'t appear or you have 0 MetaCoin,' +
-      ' ensure you\'ve configured that source properly.' +
-      ' If using MetaMask, see the following link.' +
-      ' Feel free to delete this warning. :)' +
-      ' http://truffleframework.com/tutorials/truffle-and-metamask'
+        " If you find that your accounts don't appear or you have 0 MetaCoin," +
+        " ensure you've configured that source properly." +
+        ' If using MetaMask, see the following link.' +
+        ' Feel free to delete this warning. :)' +
+        ' http://truffleframework.com/tutorials/truffle-and-metamask'
     )
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider)
   } else {
     console.warn(
       'No web3 detected. Falling back to http://127.0.0.1:8545.' +
-      ' You should remove this fallback when you deploy live, as it\'s inherently insecure.' +
-      ' Consider switching to Metamask for development.' +
-      ' More info here: http://truffleframework.com/tutorials/truffle-and-metamask'
+        " You should remove this fallback when you deploy live, as it's inherently insecure." +
+        ' Consider switching to Metamask for development.' +
+        ' More info here: http://truffleframework.com/tutorials/truffle-and-metamask'
     )
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545'))
