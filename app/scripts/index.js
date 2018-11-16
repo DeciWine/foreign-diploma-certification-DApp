@@ -7,9 +7,11 @@ import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
 import metaCoinArtifact from '../../build/contracts/MetaCoin.json'
+import certificationArtifact from '../../build/contracts/Certification.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 const MetaCoin = contract(metaCoinArtifact)
+const Certification = contract(certificationArtifact)
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -22,7 +24,8 @@ const App = {
     const self = this
 
     // Bootstrap the MetaCoin abstraction for Use.
-    MetaCoin.setProvider(web3.currentProvider)
+    //MetaCoin.setProvider(web3.currentProvider)
+    Certification.setProvider(web3.currentProvider)
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -38,9 +41,14 @@ const App = {
 
       accounts = accs
       account = accounts[0]
+      
 
       self.refreshBalance()
+
+      
     })
+      
+    
   },
 
   setStatus: function (message) {
@@ -67,44 +75,87 @@ const App = {
       })
   },
 
-  sendCoin: function () {
-    const self = this
+  // sendCoin: function () {
+  //   const self = this
 
-    const amount = parseInt(document.getElementById('amount').value)
-    const receiver = document.getElementById('receiver').value
+  //   const amount = parseInt(document.getElementById('amount').value)
+  //   const receiver = document.getElementById('receiver').value
 
-    this.setStatus('Initiating transaction... (please wait)')
+  //   this.setStatus('Initiating transaction... (please wait)')
 
-    let meta
-    MetaCoin.deployed()
-      .then(function (instance) {
-        meta = instance
-        return meta.sendCoin(receiver, amount, { from: account })
-      })
-      .then(function () {
-        self.setStatus('Transaction complete!')
-        self.refreshBalance()
-      })
-      .catch(function (e) {
-        console.log(e)
-        self.setStatus('Error sending coin; see log.')
-      })
-  },
-
+  //   let meta
+  //   MetaCoin.deployed()
+  //     .then(function (instance) {
+  //       meta = instance
+  //       return meta.sendCoin(receiver, amount, { from: account })
+  //     })
+  //     .then(function () {
+  //       self.setStatus('Transaction complete!')
+  //       self.refreshBalance()
+  //     })
+  //     .catch(function (e) {
+  //       console.log(e)
+  //       self.setStatus('Error sending coin; see log.')
+  //     })
+  // },
+  
   addCert: function () {
     // todo: 新增认证
-    let elementIDs = ['name', 'age', 'id', 'country', 'school', 'date', 'major']
+    
+    //
+    const self =this
+    let elementIDs = ['name', 'age', 'id', 'country', 'school', 'year','_month', 'major','address']
     let values = {}
     elementIDs.forEach(id => {
       values[id] = document.getElementById(id).value
     })
     console.log(values)
+    //
+    let cer
+    Certification.deployed()
+      .then(function (instance) {
+        cer = instance
+        console.log(values['address'])
+        return cer.saveDiploma(values['address'],values['name'],values['age'],values['id'],values['country'],values['school'],values['year'],values['_month'],values['major'],{from:account})
+      })
+      .then(function () {
+        self.setStatus('导入成功!')
+      })
+      .catch(function (e) {
+        console.log(e)
+        self.setStatus('导入失败; see log.')
+      })
+  
   },
 
   searchCert: function () {
     // todo: 查询认证
     let searchKeyword = document.getElementById('search_keyword').value
     console.log(searchKeyword)
+    //
+    const self =this
+    //
+    let cer
+    Certification.deployed()
+      .then(function (instance) {
+        cer = instance
+        console.log(cer)
+        // console.log(cer.getName(searchKeyword,{from:account}))
+        cer.getAge(searchKeyword, {from:account}).then(res => {
+          console.log(res)
+        }).catch(e => {
+          console.error(e)
+        })
+       // self.setStatus(cer.getName(searchKeyword))
+        
+      })
+      // .then(function () {
+      //   self.setStatus('导入成功!')
+      // })
+      .catch(function (e) {
+        console.log(e)
+        self.setStatus('导入失败; see log.')
+      })
   }
 }
 

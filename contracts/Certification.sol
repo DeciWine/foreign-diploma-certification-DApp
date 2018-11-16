@@ -35,9 +35,9 @@ contract Certification{
     }
     
     //判断一个学生是否已经注册
-    function isStudentAlreadyRegister(address _studentAddr) public returns (bool)  {
+    function isStudentAlreadyRegister(address _studentAddr) internal view returns (bool)  {
         for (uint i = 0; i < students.length; i++) {
-            if (students[i] == _studentsAddr) {
+            if (students[i] == _studentAddr) {
                 return true;
             }
         }
@@ -46,8 +46,8 @@ contract Certification{
 
     //将学历信息保存至studentAddr对应的学生
     event SaveDiploma(address sender,bool isSuccess,string message);
-    function saveDiploma(address _studentAddr,string _name,uint _age,byte32 _id,string _country,\
-        string _school,uint _year,uint _month,string _major) public returns(bool){
+    function saveDiploma(address _studentAddr,string _name,uint _age,bytes32 _id,string _country,
+        string _school,uint _year,uint _month,string _major) public returns (bool) {
         if(!isStudentAlreadyRegister(_studentAddr)){
             emit SaveDiploma(msg.sender, false, "学历导入失败");
             return false;
@@ -55,7 +55,7 @@ contract Certification{
         else{
             diploma[_studentAddr].name = _name;
             diploma[_studentAddr].age = _age;
-            diploma[_studentAddr].id = _id;
+            diploma[_studentAddr].ID = _id;
             diploma[_studentAddr].foreignCountry = _country;
             diploma[_studentAddr].school = _school;
             diploma[_studentAddr].year = _year;
@@ -79,24 +79,30 @@ contract Certification{
         return diploma[_studentAddr].ID;
     }
      //根据地址获取学生留学国家/地区
-    function getName(address _studentAddr) public returns(string){
+    function getCountry(address _studentAddr) public returns(string){
         return diploma[_studentAddr].foreignCountry;
     }
      //根据地址获取学生留学学校
-    function getName(address _studentAddr) public returns(string){
+    function getSchool(address _studentAddr) public returns(string){
         return diploma[_studentAddr].school;
     }
     //根据地址获取学生毕业年份
-    function getName(address _studentAddr) public returns(uint){
+    function getYear(address _studentAddr) public returns(uint){
         return diploma[_studentAddr].year;
     }
     //根据地址获取学生毕业月份
-    function getName(address _studentAddr) public returns(uint){
+    function getMonth(address _studentAddr) public returns(uint){
         return diploma[_studentAddr].month;
     }
     //根据地址获取学生所学专业
-    function getName(address _studentAddr) public returns(string){
-        return diploma[_studentAddr].majors;
+    function getMajor(address _studentAddr) public returns(string){
+        return diploma[_studentAddr].major;
+    }
+
+    event Test(address sender,bool isSuccess,string message);
+    function test() public returns(bool){
+        emit Test(msg.sender,true,"test ok!");
+        return true;
     }
 
 }
