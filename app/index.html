@@ -1,41 +1,222 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <!-- <title>MetaCoin - Truffle Webpack Demo w/ Frontend</title> -->
-  <title>foreign-diploma-certification-DApp</title>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="icon" href="../../../../favicon.ico" />
+
+  <title>基于以太坊的国（境）外学历认证系统</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous" />
+
+  <!-- Custom styles for this template -->
+  <!-- <link href="/style/app.css" rel="stylesheet" /> -->
   <script src="./app.js"></script>
 </head>
-<body>
-  <!-- <h1>MetaCoin</h1> -->
-  <h1>foreign-diploma-certification-DApp</h1>
-  <!-- <h2>Example Truffle Dapp</h2> -->
-  <h2>基于以太坊的国（境）外学历认证系统</h2>
-  <!-- <h3>You have <span class="black"><span id="balance"></span> META</span></h3> -->
-  <br>
-  <!-- <h1>Send MetaCoin</h1> -->
-  <!-- <br><label for="amount">Amount:</label><input type="text" id="amount" placeholder="e.g., 95"></input> -->
-  <!-- <br><label for="receiver">To Address:</label><input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input> -->
-  <!-- <br><br><button id="send" onclick="App.sendCoin()">Send MetaCoin</button> -->
-  <h1>新增认证</h1>
-  <br><label for="name">姓名:</label><input type="text" id="name" placeholder=""></input>
-  <br><label for="age">年龄:</label><input type="text" id="age" placeholder=""></input>
-  <br><label for="id">身份证:</label><input type="text" id="id" placeholder=""></input>
-  <br><label for="country">留学所在国:</label><input type="text" id="country" placeholder=""></input>
-  <br><label for="school">学校:</label><input type="text" id="school" placeholder=""></input>
-  <br><label for="year">毕业年:</label><input type="year" id="year" placeholder="2018"></input>
-  <br><label for="_month">毕业月:</label><input type="_month" id="_month" placeholder="6"></input>
-  <br><label for="major">专业:</label><input type="text" id="major" placeholder=""></input>
-  <br><label for="address">学生地址:</label><input type="text" id="address" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="addCert" onclick="App.addCert()">提交新增认证</button>
-  <br><br>
-  <h1>查询学历</h1>
-  <br><label for="search_keyword">查询字段:</label><input type="text" id="search_keyword" placeholder=""></input>
-  <br><br><button id="searchCert" onclick="App.searchCert()">提交新增认证</button>
-  <br><br>
 
-  <span id="status"></span>
-  <br>
-  <!-- <span class="hint"><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</span> -->
+<body class="text-center">
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="masthead mb-auto">
+      <div class="inner">
+        <h3 class="masthead-brand">FDC</h3>
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" href="#">首页</a>
+          <a class="nav-link" href="#">关于</a>
+        </nav>
+      </div>
+    </header>
+
+    <main role="main" class="inner cover">
+      <h1 class="cover-heading">Foreign-Diploma-Certification <br />DApp</h1>
+      <p class="lead">基于以太坊的国（境）外学历认证系统</p>
+      <p class="lead">
+        <a id="button:add" href="#" class="btn btn-lg btn-secondary" onclick="App.showComponent('add')">新增认证</a>
+        <a id="button:search" href="#" class="btn btn-lg btn-secondary" onclick="App.showComponent('search')">查询学历</a>
+      </p>
+
+      <section id="component:add" style="display: none;">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="add_name">姓名</label>
+              <input type="text" class="form-control" id="add_name" placeholder="Name">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="add_age">年龄</label>
+              <input type="text" class="form-control" id="add_age" placeholder="Age">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="add_id">身份证</label>
+            <input type="text" class="form-control" id="add_id" placeholder="ID">
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="add_school">学校</label>
+              <input type="text" class="form-control" id="add_school" placeholder="School">
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="add_major">专业</label>
+              <input type="text" class="form-control" id="add_major" placeholder="Major">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="add_country">留学所在国</label>
+              <input type="text" class="form-control" id="add_country" placeholder="Country">
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="add_year">毕业年</label>
+              <select id="add_year" class="form-control">
+                <option>1990</option>
+                <option>1991</option>
+                <option>1992</option>
+                <option>1993</option>
+                <option>1994</option>
+                <option>1995</option>
+                <option>1996</option>
+                <option>1997</option>
+                <option>1998</option>
+                <option>1999</option>
+                <option>2000</option>
+                <option>2001</option>
+                <option>2002</option>
+                <option>2003</option>
+                <option>2004</option>
+                <option>2005</option>
+                <option>2006</option>
+                <option>2007</option>
+                <option>2008</option>
+                <option>2009</option>
+                <option>2010</option>
+                <option>2011</option>
+                <option>2012</option>
+                <option>2013</option>
+                <option>2014</option>
+                <option>2015</option>
+                <option>2016</option>
+                <option>2017</option>
+                <option>2018</option>
+                <option>2019</option>
+                <option>2020</option>
+                <option>2021</option>
+                <option>2022</option>
+                <option>2023</option>
+                <option>2024</option>
+                <option>2025</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="add_month">毕业月</label>
+              <select id="add_month" class="form-control">
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+              </select>
+            </div>
+            <div class="form-group col-md-12">
+              <label for="add_address">学生地址</label>
+              <input type="email" class="form-control" id="add_address" placeholder="Address">
+            </div>
+          </div>
+          <button id="button:add" class="btn btn-primary" onclick="App.addCert()">添加</button>
+      </section>
+
+      <section id="component:search" style="display: none;">
+        <p class="lead">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="search_keyword"></label>
+                <input type="text" class="form-control" id="search_keyword" placeholder="">
+              </div>
+            </div>
+            <button id="button:search" class="btn btn-primary">查询</button>
+        </p>
+        <table class="table" id="table:search" style="display:none;">
+          <thead>
+            <tr>
+              <th scope="col">类目</th>
+              <th scope="col">信息</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">地址</th>
+              <td id="search_address">#</td>
+            </tr>
+            <tr>
+              <th scope="row">姓名</th>
+              <td id="search_name">#</td>
+            </tr>
+            <tr>
+              <th scope="row">年龄</th>
+              <td id="search_age">#</td>
+            </tr>
+            <tr>
+              <th scope="row">身份证</th>
+              <td id="search_id">#</td>
+            </tr>
+            <tr>
+              <th scope="row">留学所在国</th>
+              <td id="search_country">#</td>
+            </tr>
+            <tr>
+              <th scope="row">学校</th>
+              <td id="search_school">#</td>
+            </tr>
+            <tr>
+              <th scope="row">毕业年</th>
+              <td id="search_year">#</td>
+            </tr>
+            <tr>
+              <th scope="row">毕业月</th>
+              <td id="search_month">#</td>
+            </tr>
+            <tr>
+              <th scope="row">专业</th>
+              <td id="search_major">#</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <footer class="mastfoot mt-auto">
+      <div class="inner">
+        <p>
+          Developed by
+          <a href="">418</a>, by
+          <a href="">@daixinye @daiweijie @yangzixiao</a>.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!--
+      Bootstrap core JavaScript
+      ==================================================
+    -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>

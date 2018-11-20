@@ -25,7 +25,7 @@ const App = {
     const self = this
 
     // Bootstrap the MetaCoin abstraction for Use.
-    //MetaCoin.setProvider(web3.currentProvider)
+    // MetaCoin.setProvider(web3.currentProvider)
     Certification.setProvider(web3.currentProvider)
 
     // Get the initial account balance so it can be displayed.
@@ -42,19 +42,29 @@ const App = {
 
       accounts = accs
       account = accounts[0]
-      console.log("测试地址:"+account)
+      console.log('测试地址:' + account)
 
-      //self.refreshBalance()
+      // self.refreshBalance()
     })
 
     Certification.deployed()
       .then(function (instance) {
         cer = instance
-      }).catch(function (e) {
-        console.log(e,null)
       })
-      
-    
+      .catch(function (e) {
+        console.log(e, null)
+      })
+  },
+
+  showComponent: function (id) {
+    let components = {
+      add: document.getElementById('component:add'),
+      search: document.getElementById('component:search')
+    }
+
+    for (let key in components) {
+      components[key].style.display = key === id ? 'block' : 'none'
+    }
   },
 
   setStatus: function (message) {
@@ -104,18 +114,38 @@ const App = {
   //       self.setStatus('Error sending coin; see log.')
   //     })
   // },
-  
+
   addCert: function () {
-    // todo: 新增认证
-    
-    //
-    //const self =this
-    let elementIDs = ['name', 'age', 'id', 'country', 'school', 'year','_month', 'major','address']
+    // const self =this
+    let elementIDs = ['name', 'age', 'id', 'school', 'major', 'country', 'year', 'month', 'address']
+    let validatePatterns = {
+      age: {
+        pattern: /^[1-9][0-9]$/,
+        message: '年龄需在10岁和100岁之间'
+      },
+      id: {
+        pattern: /^[0-9]{18}$/,
+        message: '身份证需为18位数字'
+      },
+      address: {
+        pattern: /^0x[0-9a-f]{40}/,
+        message: '学生地址需为0x开头的40位16进制数字'
+      }
+    }
     let values = {}
     elementIDs.forEach(id => {
-      values[id] = document.getElementById(id).value
+      values[id] = document.getElementById('add_' + id).value
+      if (!values[id]) {
+        alert(id + '不能为空')
+        throw { message: 'invalid input' }
+      }
+      if (id in validatePatterns && !validatePatterns[id].pattern.test(values[id])) {
+        alert(validatePatterns[id].message)
+        throw { message: 'invalid input' }
+      }
     })
     console.log(values)
+
     //
     console.log(values['address'])
     // cer.newStudent(values['address'],{from: account,gas: 3000000}).then(function(){
@@ -133,24 +163,34 @@ const App = {
     //     }
     //   })
     // })
-   cer.saveDiploma(values['address'],values['name'],values['age'],values['id'],values['country'],values['school'],values['year'],values['_month'],values['major'],{from:account,gas: 3000000}).then(function(){
-     cer.SaveDiploma(function(e,r){
-      if (!e) {
-        console.log(r)
-        console.log(r.args)
-        if (r.args.isSuccess === true) {
-          window.App.setStatus('学历导入成功')
-        } else {
-          window.App.setStatus('学历导入失败')
-        }
-      } else {
-        console.log(e)
-      }
-    })
-   })
-
-      
-  
+    cer
+      .saveDiploma(
+        values['address'],
+        values['name'],
+        values['age'],
+        values['id'],
+        values['country'],
+        values['school'],
+        values['year'],
+        values['_month'],
+        values['major'],
+        { from: account, gas: 3000000 }
+      )
+      .then(function () {
+        cer.SaveDiploma(function (e, r) {
+          if (!e) {
+            console.log(r)
+            console.log(r.args)
+            if (r.args.isSuccess === true) {
+              window.App.setStatus('学历导入成功')
+            } else {
+              window.App.setStatus('学历导入失败')
+            }
+          } else {
+            console.log(e)
+          }
+        })
+      })
   },
 
   searchCert: function () {
@@ -158,17 +198,27 @@ const App = {
     let searchKeyword = document.getElementById('search_keyword').value
     console.log(searchKeyword)
     //
-    //let name 
-    //name = cer.getName(searchKeyword,{from:account,gas: 3000000})
-    //console.log(name)
-    cer.diploma.call(searchKeyword).then((result)=>{
-      result.map((v,i)=>{
-        console.log(v.valueOf())
+    // let name
+    // name = cer.getName(searchKeyword,{from:account,gas: 3000000})
+    // console.log(name)
+    cer.diploma
+      .call(searchKeyword)
+      .then(result => {
+        let elementIDs = ['name', 'age', 'id', 'school', 'major', 'country', 'year', 'month', 'address']
+        result.map((v, i) => {
+          console.log(v.valueOf())
+          document.getElementById('search_' + elementIDs[i]).innerText = v
+          if (i === 0 && v) {
+            document.getElementById('table:search').style = 'block'
+          } else {
+            document.getElementById('table:search').style = 'none'
+            alert('无法查询到该学生的学历信息')
+          }
+        })
       })
-    }).catch(e=>{
-      console.warn(e)
-    })
-  
+      .catch(e => {
+        console.warn(e)
+      })
   }
 }
 
