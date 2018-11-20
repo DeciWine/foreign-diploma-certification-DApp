@@ -197,6 +197,18 @@ const App = {
     // todo: 查询认证
     let searchKeyword = document.getElementById('search_keyword').value
     console.log(searchKeyword)
+    let validatePatterns = {
+      address: {
+        pattern: /^0x[0-9a-f]{40}/,
+        message: '学生地址需为0x开头的40位16进制数字'
+      }
+    }
+    if (searchKeyword) {
+      return alert('地址不能为空')
+    }
+    if (!validatePatterns['address'].pattern.test(searchKeyword)) {
+      return alert(validatePatterns['address'].message)
+    }
     //
     // let name
     // name = cer.getName(searchKeyword,{from:account,gas: 3000000})
@@ -212,7 +224,7 @@ const App = {
             document.getElementById('table:search').style = 'block'
           } else {
             document.getElementById('table:search').style = 'none'
-            alert('无法查询到该学生的学历信息')
+            alert('该地址没有认证的学历信息。')
           }
         })
       })
