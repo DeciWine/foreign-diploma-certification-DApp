@@ -12,6 +12,7 @@ import certificationArtifact from '../../build/contracts/Certification.json'
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 const MetaCoin = contract(metaCoinArtifact)
 const Certification = contract(certificationArtifact)
+let cer
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -41,12 +42,17 @@ const App = {
 
       accounts = accs
       account = accounts[0]
-      
+      console.log("测试地址:"+account)
 
-      self.refreshBalance()
-
-      
+      //self.refreshBalance()
     })
+
+    Certification.deployed()
+      .then(function (instance) {
+        cer = instance
+      }).catch(function (e) {
+        console.log(e,null)
+      })
       
     
   },
@@ -103,7 +109,7 @@ const App = {
     // todo: 新增认证
     
     //
-    const self =this
+    //const self =this
     let elementIDs = ['name', 'age', 'id', 'country', 'school', 'year','_month', 'major','address']
     let values = {}
     elementIDs.forEach(id => {
@@ -111,20 +117,39 @@ const App = {
     })
     console.log(values)
     //
-    let cer
-    Certification.deployed()
-      .then(function (instance) {
-        cer = instance
-        console.log(values['address'])
-        return cer.saveDiploma(values['address'],values['name'],values['age'],values['id'],values['country'],values['school'],values['year'],values['_month'],values['major'],{from:account})
-      })
-      .then(function () {
-        self.setStatus('导入成功!')
-      })
-      .catch(function (e) {
+    console.log(values['address'])
+    // cer.newStudent(values['address'],{from: account,gas: 3000000}).then(function(){
+    //   cer.NewStudent(function(e,r){
+    //     if (!e) {
+    //       console.log(r)
+    //       console.log(r.args)
+    //       if (r.args.isSuccess === true) {
+    //         window.App.setStatus('学生注册成功')
+    //       } else {
+    //         window.App.setStatus('该地址已经被注册')
+    //       }
+    //     } else {
+    //       console.log(e)
+    //     }
+    //   })
+    // })
+   cer.saveDiploma(values['address'],values['name'],values['age'],values['id'],values['country'],values['school'],values['year'],values['_month'],values['major'],{from:account,gas: 3000000}).then(function(){
+     cer.SaveDiploma(function(e,r){
+      if (!e) {
+        console.log(r)
+        console.log(r.args)
+        if (r.args.isSuccess === true) {
+          window.App.setStatus('学历导入成功')
+        } else {
+          window.App.setStatus('学历导入失败')
+        }
+      } else {
         console.log(e)
-        self.setStatus('导入失败; see log.')
-      })
+      }
+    })
+   })
+
+      
   
   },
 
@@ -133,29 +158,17 @@ const App = {
     let searchKeyword = document.getElementById('search_keyword').value
     console.log(searchKeyword)
     //
-    const self =this
-    //
-    let cer
-    Certification.deployed()
-      .then(function (instance) {
-        cer = instance
-        console.log(cer)
-        // console.log(cer.getName(searchKeyword,{from:account}))
-        cer.getAge(searchKeyword, {from:account}).then(res => {
-          console.log(res)
-        }).catch(e => {
-          console.error(e)
-        })
-       // self.setStatus(cer.getName(searchKeyword))
-        
+    //let name 
+    //name = cer.getName(searchKeyword,{from:account,gas: 3000000})
+    //console.log(name)
+    cer.diploma.call(searchKeyword).then((result)=>{
+      result.map((v,i)=>{
+        console.log(v.valueOf())
       })
-      // .then(function () {
-      //   self.setStatus('导入成功!')
-      // })
-      .catch(function (e) {
-        console.log(e)
-        self.setStatus('导入失败; see log.')
-      })
+    }).catch(e=>{
+      console.warn(e)
+    })
+  
   }
 }
 
