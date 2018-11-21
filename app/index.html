@@ -51,7 +51,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="add_id">身份证</label>
+            <label for="add_id">身份证号</label>
             <input type="text" class="form-control" id="add_id" placeholder="ID">
           </div>
           <div class="form-row">
@@ -129,10 +129,10 @@
             </div>
             <div class="form-group col-md-12">
               <label for="add_address">学生地址</label>
-              <input type="email" class="form-control" id="add_address" placeholder="Address">
+              <input type="email" class="form-control" id="add_address" placeholder="例如：0xca98742e53fc1f4ddf3d6fcf9f030e1ea449ee4a">
             </div>
           </div>
-          <button id="button:add" class="btn btn-primary" onclick="App.addCert()">添加</button>
+          <button id="button:add" class="btn btn-primary" onclick="App.addCert()">认证</button>
       </section>
 
       <section id="component:search" style="display: none;">
@@ -140,10 +140,10 @@
             <div class="form-row">
               <div class="form-group col-md-12">
                 <label for="search_keyword"></label>
-                <input type="text" class="form-control" id="search_keyword" placeholder="">
+                <input type="text" class="form-control" id="search_keyword" placeholder="输入要查询的地址，例如：0xca98742e53fc1f4ddf3d6fcf9f030e1ea449ee4a">
               </div>
             </div>
-            <button id="button:search" class="btn btn-primary">查询</button>
+            <button id="button:search" class="btn btn-primary" onclick="App.searchCert()">查询</button>
         </p>
         <table class="table" id="table:search" style="display:none;">
           <thead>
@@ -166,7 +166,7 @@
               <td id="search_age">#</td>
             </tr>
             <tr>
-              <th scope="row">身份证</th>
+              <th scope="row">身份证号</th>
               <td id="search_id">#</td>
             </tr>
             <tr>
@@ -178,16 +178,16 @@
               <td id="search_school">#</td>
             </tr>
             <tr>
+              <th scope="row">专业</th>
+              <td id="search_major">#</td>
+            </tr>
+            <tr>
               <th scope="row">毕业年</th>
               <td id="search_year">#</td>
             </tr>
             <tr>
               <th scope="row">毕业月</th>
               <td id="search_month">#</td>
-            </tr>
-            <tr>
-              <th scope="row">专业</th>
-              <td id="search_major">#</td>
             </tr>
           </tbody>
         </table>

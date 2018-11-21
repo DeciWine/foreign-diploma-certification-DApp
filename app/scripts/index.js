@@ -172,7 +172,7 @@ const App = {
         values['country'],
         values['school'],
         values['year'],
-        values['_month'],
+        values['month'],
         values['major'],
         { from: account, gas: 3000000 }
       )
@@ -182,9 +182,9 @@ const App = {
             console.log(r)
             console.log(r.args)
             if (r.args.isSuccess === true) {
-              window.App.setStatus('学历导入成功')
+              alert('学历导入成功')
             } else {
-              window.App.setStatus('学历导入失败')
+              alert('学历导入失败')
             }
           } else {
             console.log(e)
@@ -200,37 +200,47 @@ const App = {
     let validatePatterns = {
       address: {
         pattern: /^0x[0-9a-f]{40}/,
-        message: '学生地址需为0x开头的40位16进制数字'
+        message: '学生地址需为0x开头的40位16进制数字。'
       }
     }
-    if (searchKeyword) {
-      return alert('地址不能为空')
+    if (!searchKeyword) {
+      return alert('地址不能为空。')
     }
     if (!validatePatterns['address'].pattern.test(searchKeyword)) {
+      document.getElementById('search_keyword').value=""
       return alert(validatePatterns['address'].message)
     }
     //
     // let name
     // name = cer.getName(searchKeyword,{from:account,gas: 3000000})
     // console.log(name)
+    var hasInfo = true
     cer.diploma
       .call(searchKeyword)
       .then(result => {
-        let elementIDs = ['name', 'age', 'id', 'school', 'major', 'country', 'year', 'month', 'address']
+        let elementIDs = ['name', 'age', 'id', 'country', 'school', 'year', 'month', 'major','address']
         result.map((v, i) => {
           console.log(v.valueOf())
           document.getElementById('search_' + elementIDs[i]).innerText = v
-          if (i === 0 && v) {
-            document.getElementById('table:search').style = 'block'
+          if (v.valueOf()==='') {
+            hasInfo = false
           } else {
-            document.getElementById('table:search').style = 'none'
-            alert('该地址没有认证的学历信息。')
+            document.getElementById('table:search').style.display = "table"
           }
         })
+      }).then(function(){
+        if(!hasInfo){
+          alert('该地址没有认证的学历信息。')
+          document.getElementById('table:search').style.display = "none"
+          document.getElementById('search_keyword').value=""
+    }
       })
       .catch(e => {
         console.warn(e)
       })
+
+      
+
   }
 }
 
@@ -241,20 +251,20 @@ window.addEventListener('load', function () {
   if (typeof web3 !== 'undefined') {
     console.warn(
       'Using web3 detected from external source.' +
-        " If you find that your accounts don't appear or you have 0 MetaCoin," +
-        " ensure you've configured that source properly." +
-        ' If using MetaMask, see the following link.' +
-        ' Feel free to delete this warning. :)' +
-        ' http://truffleframework.com/tutorials/truffle-and-metamask'
+      " If you find that your accounts don't appear or you have 0 MetaCoin," +
+      " ensure you've configured that source properly." +
+      ' If using MetaMask, see the following link.' +
+      ' Feel free to delete this warning. :)' +
+      ' http://truffleframework.com/tutorials/truffle-and-metamask'
     )
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider)
   } else {
     console.warn(
       'No web3 detected. Falling back to http://127.0.0.1:8545.' +
-        " You should remove this fallback when you deploy live, as it's inherently insecure." +
-        ' Consider switching to Metamask for development.' +
-        ' More info here: http://truffleframework.com/tutorials/truffle-and-metamask'
+      " You should remove this fallback when you deploy live, as it's inherently insecure." +
+      ' Consider switching to Metamask for development.' +
+      ' More info here: http://truffleframework.com/tutorials/truffle-and-metamask'
     )
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545'))
